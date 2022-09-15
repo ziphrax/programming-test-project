@@ -11,6 +11,7 @@ function processFile(args) {
         console.log(chalk.gray('Arguments: ' + JSON.stringify(args)));
 
     const transformLine = new TransformLine(args);
+    const logLine = new LogLine(args);
 
     const readStream = fs.createReadStream(path.join(process.cwd(), args.input));
     const writeStream = fs.createWriteStream(path.join(process.cwd(), args.output));
@@ -20,7 +21,7 @@ function processFile(args) {
 
     readStream
         .pipe(split())
-        .pipe(args.debug ? LogLine : new PassThrough())
+        .pipe(args.debug ? logLine : new PassThrough())
         .pipe(transformLine)
         .pipe(writeStream)
         .on('error', (err) => {
